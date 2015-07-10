@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">MacDonald Marina</string>
+    <string name="action_settings">Settings</string>
+    <string name="inventoryButton">Invertory</string>
+    <string name="southViewButton">South View</string>
+    <string name="northViewButton">North View</string>
+    <string name="loadingText">Loading...</string>
+</resources>
