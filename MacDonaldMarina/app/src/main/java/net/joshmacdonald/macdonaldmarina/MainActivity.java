@@ -1,6 +1,8 @@
 package net.joshmacdonald.macdonaldmarina;
 
 import android.app.Activity;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -12,18 +14,25 @@ import android.app.ProgressDialog;
 public class MainActivity extends Activity {
 
     private static String curWebView;
-    private static WebView webView;
+    private static WebView webViewInv;
+    private static WebView webViewPic;
 
     ProgressDialog mProgressDialog;
 
     private class MyWebViewClient extends WebViewClient {
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
-            view.setVisibility(View.GONE);
-            mProgressDialog.setTitle(curWebView);
-            mProgressDialog.show();
-            mProgressDialog.setMessage("Loading...");
-            return false;
+            if( url.startsWith("http:") || url.startsWith("https:") ) {
+                view.setVisibility(View.GONE);
+                mProgressDialog.setTitle(curWebView);
+                mProgressDialog.show();
+                mProgressDialog.setMessage("Loading...");
+                return false;
+            }else{
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                startActivity( intent );
+                return true;
+            }
         }
 
         @Override
@@ -46,32 +55,42 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mProgressDialog = new ProgressDialog(this);
-        webView = (WebView)findViewById(R.id.webView);
-        webView.getSettings().setJavaScriptEnabled(true);
-        webView.setWebViewClient(new MyWebViewClient());
+        webViewInv = (WebView)findViewById(R.id.webViewInv);
+        webViewInv.getSettings().setJavaScriptEnabled(true);
+        webViewInv.getSettings().setLoadWithOverviewMode(true);
+        webViewInv.getSettings().setUseWideViewPort(true);
+        webViewInv.setWebViewClient(new MyWebViewClient());
         curWebView = "Inventory";
-        webView.loadUrl("http://www.macdonaldmarine.ca/");
-
+        webViewInv.loadUrl("http://www.macdonaldmarine.ca/");
+        webViewPic = (WebView)findViewById(R.id.webViewPic);
+        webViewPic.getSettings().setJavaScriptEnabled(true);
+        webViewPic.getSettings().setLoadWithOverviewMode(true);
+        webViewPic.getSettings().setUseWideViewPort(true);
+        webViewPic.setWebViewClient(new MyWebViewClient());
     }
 
     public void onInventoryButtonClick(View view){
         if (!(curWebView.equals("Inventory"))){
+            webViewPic.setVisibility(View.GONE);
             curWebView = "Inventory";
-            webView.loadUrl("http://www.macdonaldmarine.ca/");
+            webViewInv.loadUrl("http://www.macdonaldmarine.ca/");
         }
     }
 
     public void onNorthViewButtonClick(View view){
         if (!(curWebView.equals("North View"))){
+            webViewInv.setVisibility(View.GONE);
             curWebView = "North View";
-            webView.loadUrl("http://www.macdonaldmarine.com/North.jpg");
+            webViewPic.loadUrl("http://www.macdonaldmarine.com/North.jpg");
         }
     }
 
     public void onSouthViewButtonClick(View view){
         if (!(curWebView.equals("South View"))){
+            webViewInv.setVisibility(View.GONE);
             curWebView = "South View";
-            webView.loadUrl("http://www.macdonaldmarine.com/South.jpg");
+            webViewPic.loadUrl("http://www.macdonaldmarine.com/South.jpg");
+
         }
     }
 
